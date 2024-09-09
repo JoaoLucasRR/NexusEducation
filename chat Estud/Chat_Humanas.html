@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="../assets/img/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="../sidebar.css">
+	<link rel="stylesheet" href="../chat.css">
+    <title>Ciências da Natureza</title>
+
+</head>
+<body>
+    <div class="sidebar">
+        <a href="Chat_Ciencias da Natureza.html">Chat Ciências</a>
+        <a href="Chat_Exatas.html">Chat Exatas</a>
+        <a href="Chat_Linguagens.html">Chat Linguagens</a>
+        <a href="../HTML Estudante/InicioEstud.html">Inicio</a>
+        <p class="copyright">© 2024 NexusEducation</p>
+    </div>
+    <div class="container">
+       <img src="../assets/img/Logo.png" class="aligned-image">
+    </div>
+    <div class="content">
+        <h2>Chat - Humanas</h2>
+        <div class="chat-box" id="chatBox">
+            <!-- Mensagens serão adicionadas aqui -->
+        </div>
+
+        <div class="input-box">
+            <form id="messageForm">
+                <input type="text" id="messageInput" placeholder="Digite sua mensagem...">
+                <input type="submit" value="Enviar">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Função para enviar mensagem
+        function sendMessage(event) {
+            event.preventDefault(); // Impede o formulário de recarregar a página
+
+            var messageInput = document.getElementById('messageInput');
+            var message = messageInput.value.trim(); // Obtém o valor do campo de entrada de mensagem
+
+            if (message !== '') {
+                // Cria um novo elemento de mensagem
+                var messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+                messageElement.innerHTML = `
+                    <span class="user">Você:</span>
+                    <span class="text">${message}</span>
+                    <span class="time">${getCurrentTime()}</span>
+                `;
+
+                // Adiciona a nova mensagem ao chat
+                var chatBox = document.getElementById('chatBox');
+                chatBox.appendChild(messageElement);
+
+                // Limpa o campo de entrada de mensagem
+                messageInput.value = '';
+            }
+        }
+
+        // Função para obter o horário atual no formato HH:MM
+        function getCurrentTime() {
+            var now = new Date();
+            var hours = now.getHours().toString().padStart(2, '0');
+            var minutes = now.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+
+        // Adiciona um evento de envio de mensagem ao formulário
+        var messageForm = document.getElementById('messageForm');
+        messageForm.addEventListener('submit', sendMessage);
+    </script>
+</body>
+</html>

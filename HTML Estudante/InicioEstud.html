@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../sidebar.css">
+    <link rel="stylesheet" href="../furniture.css">
+    <link rel="stylesheet" href="../body.css">
+    <link rel="stylesheet" href="../img.css">
+    <link rel="stylesheet" href="../section.css">
+    <link rel="stylesheet" href="../dialog.css">
+    <link rel="icon" href="../assets/img/favicon.ico" type="image/x-icon">
+    <title>Home</title>
+    <style>
+        :root {
+            --clr: #3498db;
+        }
+
+        body {
+            margin: 0;
+            background-color: #E3E3E3;
+            font-family: Arial, sans-serif;
+        }
+
+        .centered {
+            text-align: center;
+            margin-top: 90px;
+        }
+
+        hr {
+            border: 1px solid #ccc;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .centered-posts {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 50px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+
+        .post-container {
+            background-color: white;
+            padding: 40px; /* Aumenta o tamanho do post */
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px; /* Ajuste a largura máxima se necessário */
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-user {
+            font-weight: bold;
+            color: #3498db;
+            cursor: pointer;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .post-actions img.like {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.3s ease;
+        }
+
+        .post-actions img.like.liked {
+            transform: scale(0.9);
+        }
+
+        .post-actions img:active {
+            transform: scale(0.8);
+        }
+
+        .post-actions img.delete {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.3s ease;
+        }
+
+        .post-actions img.delete:active {
+            transform: scale(0.8);
+        }
+
+        #professorBtn, #estudanteBtn {
+            padding: 10px 24px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        #professorBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #estudanteBtn {
+            background-color: #e7e7e7;
+            color: black;
+        }
+
+        #professorBtn.selected {
+            background-color: #468749;
+        }
+
+        #estudanteBtn.selected {
+            background-color: #aaa;
+        }
+
+        .new-post-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .new-post-modal input, .new-post-modal textarea, .new-post-modal input[type="file"] {
+            width: calc(100% - 22px); /* Ajustar para preenchimento e bordas */
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .new-post-modal button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .new-post-modal button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="#home">Início</a>
+        <a href="PerfilEstud.html">Perfil</a>
+        <a href="ForumEstud.html">Fórum</a>
+        <p class="copyright">© 2024 NexusEducation</p>
+    </div>
+
+    <div class="content">
+        <h2 id="welcomeMessage">Seja Bem-Vindo Estudante!</h2>
+        <div class="container">
+            <img src="../assets/img/Logo.png" class="aligned-image">
+            <label>
+                <input list="techs" id="searchInput" oninput="filterPosts()">
+            </label>
+            <datalist id="techs">
+                <option value="Espanhol"></option>
+                <option value="Arte"></option>
+                <option value="Matemática"></option>
+                <option value="Física"></option>
+                <option value="Biologia"></option>
+                <option value="Química"></option>
+                <option value="Português"></option>
+                <option value="Literatura"></option>
+                <option value="História"></option>
+                <option value="Geografia"></option>
+                <option value="Filosofia"></option>
+                <option value="Sociologia"></option>
+                <option value="Inglês"></option>
+            </datalist>    
+            <button type="submit" onclick="filterPosts()">Buscar</button>
+        </div>
+
+        <div class="centered">
+            <button type="button" onclick="openPostDialog()">Novo Post</button>
+        </div>
+
+        <section id="postsSection" class="centered-posts">
+            <!-- Exemplo de posts pré-publicados -->
+            <div class="post-container" data-materia="matemática">
+                <div class="post-header">
+                    <div class="post-user" onclick="goToProfile('Usuário Exemplo')">Usuário Exemplo</div>
+                    <div class="post-actions">
+                        <img class="like" src="../assets/img/unliked.png" onclick="toggleLike(this)">
+                        <img class="delete" src="../assets/img/excluir.png" onclick="deletePost(this)">
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>Este é um post de exemplo sobre Matemática.</p>
+                    <p><strong>Matéria:</strong> Matemática</p>
+                    <p><a href="#" download="example.pdf">Baixar arquivo</a></p>
+                </div>
+            </div>
+
+            <div class="post-container" data-materia="história">
+                <div class="post-header">
+                    <div class="post-user" onclick="goToProfile('Usuário Exemplo 2')">Usuário Exemplo 2</div>
+                    <div class="post-actions">
+                        <img class="like" src="../assets/img/unliked.png" onclick="toggleLike(this)">
+                        <img class="delete" src="../assets/img/excluir.png" onclick="deletePost(this)">
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>Este é um post de exemplo sobre História.</p>
+                    <p><strong>Matéria:</strong> História</p>
+                    <p><a href="#" download="example2.pdf">Baixar arquivo</a></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- New Post Modal -->
+    <div id="newPostModal" class="new-post-modal">
+        <h2>Novo Post</h2>
+        <input type="text" id="postContent" placeholder="Escreva seu post">
+        <input type="text" id="postMateria" placeholder="Qual é a matéria?">
+        <input type="file" id="postFile">
+        <button onclick="submitPost()">Publicar</button>
+    </div>
+
+    <script>
+        // Carrega o nome do usuário do localStorage e atualiza a mensagem de boas-vindas
+        window.onload = function () {
+            var savedNome = localStorage.getItem('nome') || 'Estudante';
+            document.getElementById('welcomeMessage').innerText = `Seja Bem-Vindo ${savedNome}!`;
+        };
+
+        // Função para alternar entre a imagem de curtida e não curtida
+        function toggleLike(img) {
+            if (img.src.includes("unliked.png")) {
+                img.src = "../assets/img/liked.png";
+            } else {
+                img.src = "../assets/img/unliked.png";
+            }
+
+            // Aplica a transição de "afundar"
+            img.classList.toggle("liked");
+        }
+
+        // New Post Modal Logic
+        function openPostDialog() {
+            const postModal = document.getElementById("newPostModal");
+            postModal.style.display = "block";
+        }
+
+        function closePostDialog() {
+            const postModal = document.getElementById("newPostModal");
+            postModal.style.display = "none";
+        }
+
+        function submitPost() {
+            const content = document.getElementById("postContent").value;
+            const materia = document.getElementById("postMateria").value;
+            const fileInput = document.getElementById("postFile");
+            const file = fileInput.files[0];
+            const userName = localStorage.getItem('nome') || 'Usuário';
+
+            if (content && materia) {
+                const newPost = document.createElement("div");
+                newPost.classList.add("post-container");
+                newPost.setAttribute("data-materia", materia.toLowerCase());
+
+                let fileLink = "";
+                if (file) {
+                    const fileURL = URL.createObjectURL(file);
+                    fileLink = `<p><a href="${fileURL}" download="${file.name}">Baixar arquivo</a></p>`;
+                }
+
+                newPost.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-user" onclick="goToProfile('${userName}')">${userName}</div>
+                        <div class="post-actions">
+                            <img class="like" src="../assets/img/unliked.png" onclick="toggleLike(this)">
+                            <img class="delete" src="../assets/img/excluir.png" onclick="deletePost(this)">
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>${content}</p>
+                        <p><strong>Matéria:</strong> ${materia}</p>
+                        ${fileLink}
+                    </div>
+                `;
+
+                document.getElementById("postsSection").appendChild(newPost);
+                closePostDialog();
+            }
+        }
+
+        function deletePost(post) {
+            const postContainer = post.closest(".post-container");
+            postContainer.remove();
+        }
+
+        function goToProfile(userName) {
+            // Aqui você pode redirecionar para a página de perfil do usuário
+            // Exemplo: window.location.href = `PerfilEstud.html?user=${userName}`;
+            alert(`Redirecionar para o perfil de ${userName}`);
+        }
+
+        // Função de filtro de posts
+        function filterPosts() {
+            const searchInput = document.getElementById("searchInput").value.toLowerCase();
+            const posts = document.querySelectorAll(".post-container");
+
+            posts.forEach(post => {
+                const materia = post.getAttribute("data-materia");
+                if (materia.includes(searchInput)) {
+                    post.style.display = "block";
+                } else {
+                    post.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>

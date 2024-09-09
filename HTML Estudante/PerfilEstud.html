@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="../assets/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../avatarOptions.css">
+    <link rel="stylesheet" href="../furniture.css">
+    <link rel="stylesheet" href="../body.css">
+    <link rel="stylesheet" href="../sidebar.css">
+    <link rel="stylesheet" href="../section.css">
+    <link rel="stylesheet" href="../dialog.css">
+    <title>Profile</title>
+    <style>
+        body {
+            overflow-x: hidden; /* Remove barra de rolagem horizontal */
+			background-color: #E3E3E3;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #perfil {
+            border: 2px solid #ccc;
+            padding: 30px;
+            width: 650px;
+            background-color: #f9f9f9;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            margin: 280px 0;
+            position: relative;
+        }
+
+        #avatar {
+            position: absolute;
+            top: 70px; /* Ajustado para mover a imagem mais para baixo */
+            right: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #avatar img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        #avatar input[type="file"] {
+            display: none;
+        }
+
+        .profile-info {
+            flex: 1;
+            text-align: left;
+            padding-right: 180px; /* Ajuste conforme necessário para evitar sobreposição */
+        }
+
+        .profile-info h3 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .profile-info p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .profile-info button,
+        .alterar-imagem-button {
+            text-align: center;
+            display: block;
+            margin: 20px auto;
+            padding: 6px 12px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #CC8942;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .profile-info button:hover,
+        .alterar-imagem-button:hover {
+            background-color: #FFD094;
+        }
+
+        .alterar-imagem-button {
+            text-align: left;
+            position: absolute;
+            top: 185px; /* Ajuste a posição vertical do botão */
+            right: 300px; /* Ajuste a posição horizontal do botão */
+            background-color: #CC8942; /* Cor do fundo */
+            color: white; /* Cor do texto */
+            border-radius: 5px; /* Borda arredondada */
+            border: none; /* Remove bordas padrão */
+            padding: 5px 10px; /* Espaçamento interno */
+            font-size: 18px; /* Tamanho da fonte */
+            cursor: pointer; /* Cursor ao passar sobre o botão */
+            transition: background-color 0.3s ease; /* Transição de cor */
+        }
+
+        .dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            z-index: 1000;
+            width: 400px;
+            max-width: 800px;
+        }
+
+        .dialog h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .dialog div {
+            margin-bottom: 15px;
+        }
+
+        .dialog label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        .dialog input,
+        .dialog select {
+            width: 100%;
+            padding: 5px;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .dialog button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #CC8942;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .dialog button:hover {
+            background-color: #FFD094;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .close:hover {
+            border-radius: 15px;
+            background-color: #CF7722;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Barra lateral -->
+    <div class="sidebar">
+        <a href="InicioEstud.html">Início</a>
+        <a href="#perfil">Perfil</a>
+        <p class="copyright">© 2024 NexusEducation</p>
+    </div>
+
+    <div class="content">
+        <!-- Perfil -->
+        <section id="perfil">
+            <div class="profile-info">
+                <h3>Perfil do Aluno</h3>
+                <p><b>Nome: </b><span id="nome">[Seu Nome]</span></p>
+                <p><b>Email:</b> <span id="email">[Seu Email]</span></p>
+                <p><b>Localização: </b><span id="localizacao">[Sua Localização]</span></p>
+                <button onclick="openDialog()">Editar</button>
+                <button class="alterar-imagem-button" onclick="triggerFileInput()">Alterar Imagem</button>
+            </div>
+            <div id="avatar">
+                <img id="avatarImage" src="../assets/img/Teste.png" alt="Avatar">
+                <input type="file" id="fileInput" accept="image/*" onchange="loadFile(event)">
+            </div>
+        </section>
+
+        <div id="dialog" class="dialog">
+            <span onclick="closeDialog()" class="close">&times;</span>
+            <h2>Editar Perfil</h2>
+            <div>
+                <label for="novoNome">Nome:</label>
+                <input type="text" id="novoNome">
+            </div>
+            <div>
+                <label for="novoEmail">Email:</label>
+                <input type="text" id="novoEmail">
+            </div>
+            <div>
+                <label for="novaLocalizacao">Estado:</label>
+                <select id="novaLocalizacao">
+                    <option value="AC">Acre</option>
+                    <option value="AL">Alagoas</option>
+                    <option value="AP">Amapá</option>
+                    <option value="AM">Amazonas</option>
+                    <option value="BA">Bahia</option>
+                    <option value="CE">Ceará</option>
+                    <option value="ES">Espírito Santo</option>
+                    <option value="GO">Goiás</option>
+                    <option value="MA">Maranhão</option>
+                    <option value="MT">Mato Grosso</option>
+                    <option value="MS">Mato Grosso do Sul</option>
+                    <option value="MG">Minas Gerais</option>
+                    <option value="PA">Pará</option>
+                    <option value="PB">Paraíba</option>
+                    <option value="PR">Paraná</option>
+                    <option value="PE">Pernambuco</option>
+                    <option value="PI">Piauí</option>
+                    <option value="RJ">Rio de Janeiro</option>
+                    <option value="RN">Rio Grande do Norte</option>
+                    <option value="RS">Rio Grande do Sul</option>
+                    <option value="RO">Rondônia</option>
+                    <option value="RR">Roraima</option>
+                    <option value="SC">Santa Catarina</option>
+                    <option value="SP">São Paulo</option>
+                    <option value="SE">Sergipe</option>
+                    <option value="TO">Tocantins</option>
+                    <option value="DF">Distrito Federal</option>
+                </select>
+            </div>
+            <button onclick="editProfile()">Salvar</button>
+        </div>
+    </div>
+
+    <script>
+        function openDialog() {
+            document.getElementById("dialog").style.display = "block";
+        }
+
+        function closeDialog() {
+            document.getElementById("dialog").style.display = "none";
+        }
+
+        function editProfile() {
+            var novoNome = document.getElementById("novoNome").value || "[Seu Nome]";
+            var novoEmail = document.getElementById("novoEmail").value || "[Seu Email]";
+            var novaLocalizacao = document.getElementById("novaLocalizacao").value || "[Sua Localização]";
+
+            // Atualiza os valores na página
+            document.getElementById("nome").innerText = novoNome;
+            document.getElementById("email").innerText = novoEmail;
+            document.getElementById("localizacao").innerText = novaLocalizacao;
+
+            // Salva as informações no localStorage
+            localStorage.setItem('nome', novoNome);
+            localStorage.setItem('email', novoEmail);
+            localStorage.setItem('localizacao', novaLocalizacao);
+
+            // Atualiza o nome do usuário na página de perfil
+            saveUserName();
+
+            closeDialog();
+        }
+
+        function saveUserName() {
+            var nome = document.getElementById("novoNome").value;
+            localStorage.setItem('userName', nome);
+        }
+
+        function triggerFileInput() {
+            document.getElementById('fileInput').click();
+        }
+
+        function loadFile(event) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById('avatarImage');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        window.onload = function() {
+            var savedName = localStorage.getItem('nome');
+            var savedEmail = localStorage.getItem('email');
+            var savedLocation = localStorage.getItem('localizacao');
+            var savedUserName = localStorage.getItem('userName');
+
+            if (savedName) {
+                document.getElementById('nome').innerText = savedName;
+                document.getElementById('novoNome').value = savedName;
+            }
+
+            if (savedEmail) {
+                document.getElementById('email').innerText = savedEmail;
+                document.getElementById('novoEmail').value = savedEmail;
+            }
+
+            if (savedLocation) {
+                document.getElementById('localizacao').innerText = savedLocation;
+                document.getElementById('novaLocalizacao').value = savedLocation;
+            }
+        };
+    </script>
+</body>
+
+</html>

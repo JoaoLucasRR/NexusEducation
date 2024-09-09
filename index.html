@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
+  <title>Login</title>
+  <style>
+    body {
+      background-color: #FFCD80;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 200px auto;
+      padding: 60px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .button {
+      background-color: white;
+      color: #000;
+      border: none;
+      padding: 12px 24px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: #CC8942;
+      color: white;
+    }
+
+    .form {
+      display: none;
+    }
+
+    .form.active {
+      display: block;
+    }
+
+    .form h2 {
+      margin-bottom: 20px;
+    }
+
+    .form div {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .form label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form input[type="text"],
+    .form input[type="password"],
+    .form input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background-color: white;
+      color: black;
+      box-sizing: border-box;
+    }
+
+    .form input[type="submit"] {
+      width: 50%;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: #CC8942;
+      color: #000;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .form input[type="submit"]:hover {
+      background-color: white;
+    }
+
+    .logo-container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .aligned-image {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .keep-login {
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .keep-login.clicked {
+      transform: scale(0.95);
+    }
+
+    .keep-login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .keep-login-container span {
+      color: white;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="logo-container">
+      <img src="assets/img/Logo.png" class="aligned-image">
+    </div>
+    <button class="button" onclick="showLoginForm('studentLoginForm')">Entrar</button>
+    <button class="button" onclick="showLoginForm('teacherSignUpForm')">Cadastrar-se</button>
+
+    <!-- Formulário de login para estudante -->
+    <form id="studentLoginForm" class="form login" onsubmit="validateStudentForm(event)">
+      <h2>Login</h2>
+      <div>
+        <label for="studentName">Nome</label>
+        <input id="studentName" type="text" name="name" placeholder="Nome" required>
+      </div>
+
+      <div>
+        <label for="studentPassword">Senha</label>
+        <input id="studentPassword" type="password" name="password" placeholder="Senha" required>
+      </div>
+
+      <div class="keep-login-container">
+        <img src="assets/img/unchecked.png" id="keepLoginImage" class="keep-login" onclick="toggleKeepLogin()" alt="Keep me logged in">
+        <span>Manter login</span>
+      </div>
+
+      <div>
+        <input type="submit" value="Sign In">
+      </div>
+    </form>
+
+    <!-- Formulário de cadastro para professor -->
+    <form id="teacherSignUpForm" class="form signup" onsubmit="validateSignUpForm(event)">
+      <h2>Sign-up</h2>
+      <div>
+        <label for="teacherName">Nome</label>
+        <input id="teacherName" type="text" name="name" placeholder="Nome" required>
+      </div>
+
+      <div>
+        <label for="teacherEmail">Email</label>
+        <input id="teacherEmail" type="email" name="email" placeholder="Email" required>
+      </div>
+
+      <div>
+        <label for="teacherState">Estado</label>
+        <input id="teacherState" type="text" name="state" placeholder="Estado" required>
+      </div>
+
+      <div>
+        <label for="teacherPassword">Senha</label>
+        <input id="teacherPassword" type="password" name="password" placeholder="Senha" required>
+      </div>
+
+      <div>
+        <label for="repeatPassword">Repetir Senha</label>
+        <input id="repeatPassword" type="password" name="repeatPassword" placeholder="Repetir Senha" required>
+      </div>
+
+      <div>
+        <input type="submit" value="Sign Up">
+      </div>
+    </form>
+  </div>
+
+  <script>
+    var keepLoginChecked = false;
+    var registeredUsers = [];
+
+    function showLoginForm(formId) {
+      var forms = document.querySelectorAll('.form');
+      forms.forEach(function (form) {
+        form.classList.remove('active');
+      });
+      document.getElementById(formId).classList.add('active');
+    }
+
+    function validateStudentForm(event) {
+      event.preventDefault();
+      
+      var name = document.getElementById("studentName").value;
+      var password = document.getElementById("studentPassword").value;
+
+      var user = registeredUsers.find(function(user) {
+        return user.name === name && user.password === password;
+      });
+
+      if (user) {
+        window.location.href = "HTML Estudante/PerfilEstud.html";
+      } else {
+        alert("Credenciais inválidas.");
+      }
+    }
+
+    function validateSignUpForm(event) {
+      event.preventDefault();
+
+      var name = document.getElementById("teacherName").value;
+      var email = document.getElementById("teacherEmail").value;
+      var state = document.getElementById("teacherState").value;
+      var password = document.getElementById("teacherPassword").value;
+      var repeatPassword = document.getElementById("repeatPassword").value;
+
+      if (name && email && state && password && repeatPassword) {
+        if (password !== repeatPassword) {
+          alert("As senhas não coincidem.");
+          return;
+        }
+
+        registeredUsers.push({
+          name: name,
+          email: email,
+          state: state,
+          password: password
+        });
+
+        alert("Cadastro realizado com sucesso!");
+      } else {
+        alert("Por favor, preencha todos os campos.");
+      }
+    }
+
+    function toggleKeepLogin() {
+      var img = document.getElementById("keepLoginImage");
+      if (keepLoginChecked) {
+        img.src = "assets/img/unchecked.png";
+        img.classList.remove('clicked');
+        keepLoginChecked = false;
+      } else {
+        img.src = "assets/img/checked.png";
+        img.classList.add('clicked');
+        keepLoginChecked = true;
+      }
+    }
+  </script>
+</body>
+
+</html>
